@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gui SYSTEM "kpartgui.dtd">
+<gui name="kspotify" version="3">
+  <MenuBar>
+    <Menu name="file">
+      <Action name="reload"/>
+      <Action name="home"/>
+      <Separator/>
+      <Action name="sign_in_browser"/>
+    </Menu>
+  </MenuBar>
+</gui>

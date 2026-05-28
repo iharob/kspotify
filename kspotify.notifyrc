@@ -1,0 +1,9 @@
+[Global]
+IconName=kspotify
+Name=KSpotify
+Comment=Spotify Web Player
+
+[Event/webNotification]
+Name=Web Notification
+Comment=Notification from Spotify
+Action=Popup

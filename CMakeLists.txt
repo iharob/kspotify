@@ -1,0 +1,46 @@
+cmake_minimum_required(VERSION 3.20)
+
+project(kspotify VERSION 1.0.0 LANGUAGES CXX)
+
+set(QT_MIN_VERSION "6.6.0")
+set(KF_MIN_VERSION "6.0.0")
+
+find_package(ECM ${KF_MIN_VERSION} REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDECompilerSettings NO_POLICY_SCOPE)
+include(ECMInstallIcons)
+include(FeatureSummary)
+
+find_package(Qt6 ${QT_MIN_VERSION} REQUIRED COMPONENTS
+    Core
+    Widgets
+    WebEngineWidgets
+)
+
+find_package(KF6 ${KF_MIN_VERSION} REQUIRED COMPONENTS
+    ColorScheme
+    CoreAddons
+    I18n
+    XmlGui
+    Crash
+    DBusAddons
+    Notifications
+    StatusNotifierItem
+)
+
+add_subdirectory(src)
+
+ecm_install_icons(ICONS
+    icons/sc-apps-kspotify.svg
+    icons/sc-status-kspotify-tray.svg
+    DESTINATION ${KDE_INSTALL_ICONDIR}
+)
+
+install(FILES org.kde.kspotify.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES kspotify.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR})
+install(FILES kspotify.colors DESTINATION ${KDE_INSTALL_DATADIR}/color-schemes)
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

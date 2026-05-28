@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=KSpotify
+GenericName=Music Player
+Comment=Spotify Web Player for KDE
+Exec=kspotify
+Icon=kspotify
+Terminal=false
+Categories=Qt;KDE;Audio;Music;Player;
+StartupWMClass=kspotify
+X-DBUS-ServiceName=org.kde.kspotify
