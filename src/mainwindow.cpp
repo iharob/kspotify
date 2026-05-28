@@ -159,7 +159,6 @@ MainWindow::MainWindow(QWidget *parent)
     menuBar()->setStyleSheet(QStringLiteral(
         "QMenuBar { background: #000000; color: #ffffff; border: none; }"
         "QMenuBar::item { background: transparent; padding: 4px 8px; }"
-        "QMenu { background: #282828; color: #ffffff; border: 1px solid #383838; }"
     ));
 
     resize(1280, 800);
