@@ -154,7 +154,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     setProperty("_breeze_no_separator", true);
 
-    setupGUI(Default, QStringLiteral("kspotifyui.rc"));
+    setupGUI(ToolBar | Keys | Save | Create, QStringLiteral("kspotifyui.rc"));
 
     menuBar()->setStyleSheet(QStringLiteral(
         "QMenuBar { background: #000000; color: #ffffff; border: none; }"
