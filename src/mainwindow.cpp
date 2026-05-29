@@ -1,11 +1,16 @@
 #include "mainwindow.h"
 
+#include <QAction>
 #include <QCloseEvent>
 #include <QDesktopServices>
 #include <QDir>
+#include <QFile>
+#include <QFileInfo>
 #include <QIcon>
+#include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QStandardPaths>
 #include <QNetworkCookie>
 #include <QProcess>
 #include <QTimer>
@@ -105,6 +110,7 @@ MainWindow::MainWindow(QWidget *parent)
     auto *page = new SpotifyPage(profile, this);
     m_webView = new QWebEngineView(this);
     m_webView->setPage(page);
+    m_webView->setContextMenuPolicy(Qt::NoContextMenu);
 
     auto *settings = m_webView->page()->settings();
     settings->setAttribute(QWebEngineSettings::PlaybackRequiresUserGesture, false);
@@ -152,14 +158,9 @@ MainWindow::MainWindow(QWidget *parent)
     setupActions();
     setupTrayIcon();
 
-    setProperty("_breeze_no_separator", true);
-
     setupGUI(ToolBar | Keys | Save | Create, QStringLiteral("kspotifyui.rc"));
 
-    menuBar()->setStyleSheet(QStringLiteral(
-        "QMenuBar { background: #000000; color: #ffffff; border: none; }"
-        "QMenuBar::item { background: transparent; padding: 4px 8px; }"
-    ));
+    menuBar()->hide();
 
     resize(1280, 800);
 }
@@ -187,10 +188,6 @@ void MainWindow::showSignInPage()
 void MainWindow::setupActions()
 {
     KStandardAction::quit(qApp, &QCoreApplication::quit, actionCollection());
-    KStandardAction::showMenubar(this, [this](bool visible) {
-        menuBar()->setVisible(visible);
-        menuBar()->setMaximumHeight(visible ? QWIDGETSIZE_MAX : 0);
-    }, actionCollection());
 
     auto *reload = new QAction(QIcon::fromTheme(QStringLiteral("view-refresh")),
                                i18n("&Reload"), this);
@@ -207,11 +204,6 @@ void MainWindow::setupActions()
     connect(home, &QAction::triggered, this, [this]() {
         m_webView->load(QUrl(QStringLiteral("https://open.spotify.com")));
     });
-
-    auto *signInAct = new QAction(QIcon::fromTheme(QStringLiteral("system-users")),
-                                  i18n("&Sign In via Browser..."), this);
-    actionCollection()->addAction(QStringLiteral("sign_in_browser"), signInAct);
-    connect(signInAct, &QAction::triggered, this, &MainWindow::signIn);
 }
 
 void MainWindow::setupTrayIcon()
@@ -223,6 +215,18 @@ void MainWindow::setupTrayIcon()
     else
         m_trayIcon->setIconByName(QStringLiteral("kspotify"));
     m_trayIcon->setStandardActionsEnabled(true);
+
+    auto *signInAct = new QAction(QIcon::fromTheme(QStringLiteral("system-users")),
+                                  i18n("Sign In via Browser..."), this);
+    connect(signInAct, &QAction::triggered, this, &MainWindow::signIn);
+    m_trayIcon->contextMenu()->addAction(signInAct);
+
+    auto *autostart = new QAction(i18n("Start automatically at login"), this);
+    autostart->setCheckable(true);
+    autostart->setChecked(isAutostartEnabled());
+    connect(autostart, &QAction::toggled, this, &MainWindow::setAutostartEnabled);
+    m_trayIcon->contextMenu()->addAction(autostart);
+
     m_trayIcon->setToolTipTitle(i18n("KSpotify"));
     m_trayIcon->setToolTipSubTitle(i18n("Spotify Web Player"));
 
@@ -235,6 +239,46 @@ void MainWindow::setupTrayIcon()
             activateWindow();
         }
     });
+}
+
+static QString autostartDesktopPath()
+{
+    return QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation)
+        + QStringLiteral("/autostart/org.kde.kspotify.desktop");
+}
+
+bool MainWindow::isAutostartEnabled() const
+{
+    return QFile::exists(autostartDesktopPath());
+}
+
+void MainWindow::setAutostartEnabled(bool enabled)
+{
+    const QString path = autostartDesktopPath();
+    QFile::remove(path);
+    if (!enabled)
+        return;
+
+    QDir().mkpath(QFileInfo(path).absolutePath());
+
+    const QString installed = QStandardPaths::locate(
+        QStandardPaths::ApplicationsLocation, QStringLiteral("org.kde.kspotify.desktop"));
+    if (!installed.isEmpty()) {
+        QFile::copy(installed, path);
+        return;
+    }
+
+    QFile file(path);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        file.write(
+            "[Desktop Entry]\n"
+            "Type=Application\n"
+            "Name=KSpotify\n"
+            "Exec=kspotify\n"
+            "Icon=kspotify\n"
+            "Terminal=false\n"
+            "X-GNOME-Autostart-enabled=true\n");
+    }
 }
 
 void MainWindow::handlePermission(QWebEnginePermission permission)
