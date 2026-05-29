@@ -216,11 +216,6 @@ void MainWindow::setupTrayIcon()
         m_trayIcon->setIconByName(QStringLiteral("kspotify"));
     m_trayIcon->setStandardActionsEnabled(true);
 
-    auto *signInAct = new QAction(QIcon::fromTheme(QStringLiteral("system-users")),
-                                  i18n("Sign In via Browser..."), this);
-    connect(signInAct, &QAction::triggered, this, &MainWindow::signIn);
-    m_trayIcon->contextMenu()->addAction(signInAct);
-
     auto *autostart = new QAction(i18n("Start automatically at login"), this);
     autostart->setCheckable(true);
     autostart->setChecked(isAutostartEnabled());
@@ -344,12 +339,6 @@ void MainWindow::handleNewWindowRequest(QWebEngineNewWindowRequest &request)
     } else {
         QDesktopServices::openUrl(url);
     }
-}
-
-void MainWindow::signIn()
-{
-    QDesktopServices::openUrl(QUrl(QStringLiteral("https://accounts.spotify.com/login")));
-    showSignInPage();
 }
 
 bool MainWindow::importFromFirefox()

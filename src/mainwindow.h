@@ -36,7 +36,6 @@ private:
     void handleNotification(std::unique_ptr<QWebEngineNotification> notification);
     void handleFullScreenRequest(QWebEngineFullScreenRequest request);
     void handleNewWindowRequest(QWebEngineNewWindowRequest &request);
-    void signIn();
 
     QWebEngineView *m_webView = nullptr;
     KStatusNotifierItem *m_trayIcon = nullptr;
