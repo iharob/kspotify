@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     KAboutData aboutData(
         QStringLiteral("kspotify"),
         i18n("KSpotify"),
-        QStringLiteral("1.1.0"), // x-release-please-version
+        QStringLiteral("1.2.0"), // x-release-please-version
         i18n("Spotify Web Player for KDE"),
         KAboutLicense::GPL_V3,
         i18n("© 2025–2026 KSpotify contributors"),

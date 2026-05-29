@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/iharob/kspotify/compare/v1.1.0...v1.2.0) (2026-05-29)
+
+
+### Features
+
+* drop redundant "Sign In via Browser" tray action ([e07fbfb](https://github.com/iharob/kspotify/commit/e07fbfb23aeb42c38cd6530ecd2873805f7538c7))
+
 ## [1.1.0](https://github.com/iharob/kspotify/compare/v1.0.1...v1.1.0) (2026-05-29)
 
 
