@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/iharob/kspotify/compare/v1.2.0...v1.3.0) (2026-05-29)
+
+
+### Features
+
+* start hidden in the tray when launched via autostart ([dbe2beb](https://github.com/iharob/kspotify/commit/dbe2beb4c8b7cb8725445df367acc7ff8630f934))
+
 ## [1.2.0](https://github.com/iharob/kspotify/compare/v1.1.0...v1.2.0) (2026-05-29)
 
 
